@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — ISMA Clearance Portal</title>
+    <link rel="stylesheet" href="/public/portal.css">
+</head>
+<body>
+    <div class="auth-shell">
+        <aside class="auth-hero">
+            <div class="brand-mark">
+                <div class="seal">ISMA</div>
+                <div class="brand-text">
+                    <span class="brand-name">ISMA Clearance Portal</span>
+                    <span class="brand-sub">Iraqi Supreme Maritime Authority</span>
+                </div>
+            </div>
+            <div class="hero-copy">
+                <h1>Port clearance, verified at sea.</h1>
+                <p>Issue and manage exit permits with embedded QR verification for Iraqi territorial waters.</p>
+            </div>
+            <p class="hero-footer">Authorized personnel only</p>
+        </aside>
+
+        <main class="auth-panel">
+            <div class="auth-card">
+                <h2>Sign in</h2>
+                <p class="lead">Access your clearance workspace with your staff credentials.</p>
+
+                <div id="alert" class="hidden"></div>
+
+                <form id="loginForm">
+                    <div class="field">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" required placeholder="you@example.com" autocomplete="username">
+                    </div>
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
+                    </div>
+                    <div class="field-row-check">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Remember me on this device</label>
+                    </div>
+                    <button type="submit" id="loginBtn" class="btn btn-primary btn-block">Sign In</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const alertEl = document.getElementById('alert');
+
+        function showAlert(message, type = 'error') {
+            alertEl.className = `alert ${type === 'error' ? 'alert-error' : 'alert-success'}`;
+            alertEl.textContent = message;
+            setTimeout(() => {
+                alertEl.className = 'hidden';
+            }, 5000);
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    showAlert('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+                } else {
+                    showAlert(data.error || 'Login failed');
+                }
+            } catch (error) {
+                showAlert('An error occurred. Please try again.');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        });
+
+        if (localStorage.getItem('token')) {
+            window.location.href = '/dashboard';
+        }
+    </script>
+</body>
+</html>

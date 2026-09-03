@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — ISMA Clearance Portal</title>
+    <link rel="stylesheet" href="/public/portal.css">
+</head>
+<body>
+    <div class="auth-shell">
+        <aside class="auth-hero">
+            <div class="brand-mark">
+                <div class="seal">ISMA</div>
+                <div class="brand-text">
+                    <span class="brand-name">ISMA Clearance Portal</span>
+                    <span class="brand-sub">Iraqi Supreme Maritime Authority</span>
+                </div>
+            </div>
+            <div class="hero-copy">
+                <h1>Create your staff account.</h1>
+                <p>Register to issue port clearance documents and manage QR-verified permits.</p>
+            </div>
+            <p class="hero-footer">Authorized personnel only</p>
+        </aside>
+
+        <main class="auth-panel">
+            <div class="auth-card">
+                <h2>Create account</h2>
+                <p class="lead">Set up credentials for the clearance portal.</p>
+
+                <div id="alert" class="hidden"></div>
+
+                <form id="registerForm">
+                    <div class="field">
+                        <label for="name">Full name</label>
+                        <input type="text" id="name" required placeholder="John Doe" autocomplete="name">
+                    </div>
+                    <div class="field">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" required placeholder="you@example.com" autocomplete="email">
+                    </div>
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+                        <p class="hint">Minimum 6 characters</p>
+                    </div>
+                    <div class="field">
+                        <label for="confirmPassword">Confirm password</label>
+                        <input type="password" id="confirmPassword" required placeholder="••••••••" autocomplete="new-password">
+                    </div>
+                    <div class="field-row-check">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to the Terms of Service and Privacy Policy</label>
+                    </div>
+                    <button type="submit" id="registerBtn" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+
+                <p class="auth-footer-link">
+                    Already have an account?
+                    <a href="/login">Sign in</a>
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const registerBtn = document.getElementById('registerBtn');
+        const alertEl = document.getElementById('alert');
+
+        function showAlert(message, type = 'error') {
+            alertEl.className = `alert ${type === 'error' ? 'alert-error' : 'alert-success'}`;
+            alertEl.textContent = message;
+            setTimeout(() => {
+                alertEl.className = 'hidden';
+            }, 5000);
+        }
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters');
+                return;
+            }
+
+            registerBtn.disabled = true;
+            registerBtn.textContent = 'Creating account...';
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password }),
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    showAlert('Account created successfully! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+                } else {
+                    showAlert(data.error || 'Registration failed');
+                }
+            } catch (error) {
+                showAlert('An error occurred. Please try again.');
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.textContent = 'Create Account';
+            }
+        });
+
+        if (localStorage.getItem('token')) {
+            window.location.href = '/dashboard';
+        }
+    </script>
+</body>
+</html>

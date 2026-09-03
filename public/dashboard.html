@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — ISMA Clearance Portal</title>
+    <link rel="stylesheet" href="/public/portal.css">
+</head>
+<body class="dash-body">
+    <nav class="topbar">
+        <div class="topbar-inner">
+            <div class="brand-mark">
+                <div class="seal">ISMA</div>
+                <div class="brand-text">
+                    <span class="brand-name">ISMA Clearance Portal</span>
+                    <span class="brand-sub">Port Clearance Control</span>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <div class="user-chip">
+                    <div class="label">Signed in as</div>
+                    <div class="name" id="userName">User</div>
+                </div>
+                <button type="button" class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dash-main">
+        <div class="dash-header">
+            <div>
+                <p class="eyebrow">Workspace</p>
+                <h1>Port Clearance Desk</h1>
+                <p class="desc">Create, monitor, and renew exit permits. QR verification remains on the public view page.</p>
+            </div>
+            <div class="dash-actions">
+                <button type="button" class="btn btn-ghost" onclick="loadDocuments()">Refresh</button>
+                <button type="button" class="btn btn-accent" onclick="showCreateForm()">New Document</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-label">Active</p>
+                <p class="stat-value" id="activeCount">0</p>
+                <p class="stat-hint">Ready for use</p>
+            </div>
+            <div class="stat-card expired">
+                <p class="stat-label">Expired</p>
+                <p class="stat-value" id="expiredCount">0</p>
+                <p class="stat-hint">Need attention</p>
+            </div>
+            <div class="stat-card total">
+                <p class="stat-label">Total</p>
+                <p class="stat-value" id="totalCount">0</p>
+                <p class="stat-hint">All certificates</p>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">Documents</p>
+                    <h2>Your Certificates</h2>
+                </div>
+            </div>
+            <div id="documentsContainer">
+                <div class="docs-loading">
+                    <div class="spinner"></div>
+                    <p>Fetching your documents…</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="documentModal" class="modal-overlay hidden">
+        <div class="modal-panel">
+            <div class="modal-head">
+                <div>
+                    <p class="eyebrow">Document Builder</p>
+                    <h3 id="modalTitle">Create New Port Clearance</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+            </div>
+
+            <form id="documentForm">
+                <input type="hidden" id="documentId">
+
+                <div class="notice">
+                    <strong>Quick start:</strong> Fill in vessel and clearance details below to generate the Port Clearance PDF.
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-head">
+                        <div>
+                            <p class="eyebrow">Document</p>
+                            <h4>Port Clearance Information</h4>
+                        </div>
+                        <span class="tag">Required</span>
+                    </div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="PERMIT_NUMBER">Permit Number</label>
+                            <input type="text" dir="auto" id="PERMIT_NUMBER" class="form-control" placeholder="15698">
+                        </div>
+                        <div class="field">
+                            <label for="ISSUANCE_DATE">Issuance Date</label>
+                            <input type="text" dir="auto" id="ISSUANCE_DATE" class="form-control" placeholder="02-Apr-2026">
+                        </div>
+                        <div class="field">
+                            <label for="VESSEL_NAME">Vessel Name</label>
+                            <input type="text" dir="auto" id="VESSEL_NAME" class="form-control" placeholder="ASTRID">
+                        </div>
+                        <div class="field">
+                            <label for="VESSEL_IMO">Vessel IMO</label>
+                            <input type="text" dir="auto" id="VESSEL_IMO" class="form-control" placeholder="9246475">
+                        </div>
+                        <div class="field">
+                            <label for="FLAG">Flag</label>
+                            <input type="text" dir="auto" id="FLAG" class="form-control" placeholder="PANAMA">
+                        </div>
+                        <div class="field">
+                            <label for="CLASSIFICATION_SOCIETY">Classification Society</label>
+                            <input type="text" dir="auto" id="CLASSIFICATION_SOCIETY" class="form-control" placeholder="TANKER">
+                        </div>
+                        <div class="field">
+                            <label for="DEPARTURE_PORT">Departure Port Name</label>
+                            <input type="text" dir="auto" id="DEPARTURE_PORT" class="form-control" placeholder="Khur Al-Zubair Port">
+                        </div>
+                        <div class="field">
+                            <label for="VESSEL_TYPE">Vessel Type</label>
+                            <input type="text" dir="auto" id="VESSEL_TYPE" class="form-control" placeholder="Oil Tanker">
+                        </div>
+                        <div class="field">
+                            <label for="VESSEL_GRT">Vessel GRT</label>
+                            <input type="text" dir="auto" id="VESSEL_GRT" class="form-control" placeholder="30008">
+                        </div>
+                        <div class="field">
+                            <label for="AGENCY_NAME">Agency Name</label>
+                            <input type="text" dir="auto" id="AGENCY_NAME" class="form-control" placeholder="Agency name">
+                        </div>
+                        <div class="field">
+                            <label for="ARRIVAL_DATE">Arrival Date</label>
+                            <input type="date" id="ARRIVAL_DATE" class="form-control">
+                        </div>
+                        <div class="field">
+                            <label for="DEPARTURE_DATE">Departure Date</label>
+                            <input type="date" id="DEPARTURE_DATE" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-head">
+                        <div>
+                            <p class="eyebrow">Additional Details</p>
+                            <h4>Vessel and Cargo Information</h4>
+                        </div>
+                        <span class="tag">Optional</span>
+                    </div>
+                    <p class="hint" style="margin-bottom: 1rem;">Completed fields are printed in both the English and Arabic sections of the PDF.</p>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="CALL_SIGN">Call Sign</label>
+                            <input type="text" dir="auto" id="CALL_SIGN" class="form-control" placeholder="3E2536">
+                        </div>
+                        <div class="field">
+                            <label for="NEXT_PORT">Next Port</label>
+                            <input type="text" dir="auto" id="NEXT_PORT" class="form-control" placeholder="HAMRIYAH, Sharjah">
+                        </div>
+                        <div class="field">
+                            <label for="VOYAGE_NUMBER">Voyage Number</label>
+                            <input type="text" dir="auto" id="VOYAGE_NUMBER" class="form-control" placeholder="V2604">
+                        </div>
+                        <div class="field">
+                            <label for="MASTER_NAME">Master Name</label>
+                            <input type="text" dir="auto" id="MASTER_NAME" class="form-control" placeholder="WANG CHUNHAO">
+                        </div>
+                        <div class="field">
+                            <label for="MASTER_NATIONALITY">Master Nationality</label>
+                            <input type="text" dir="auto" id="MASTER_NATIONALITY" class="form-control" placeholder="CHINA">
+                        </div>
+                        <div class="field">
+                            <label for="CREW_NUMBER">Crew Number</label>
+                            <input type="number" id="CREW_NUMBER" min="0" step="1" class="form-control" placeholder="23">
+                        </div>
+                        <div class="field">
+                            <label for="CARGO_TYPE">Cargo Type</label>
+                            <input type="text" dir="auto" id="CARGO_TYPE" class="form-control" placeholder="WHITE SPIRIT">
+                        </div>
+                        <div class="field">
+                            <label for="CARGO_QUANTITY">Cargo Quantity</label>
+                            <input type="text" dir="auto" id="CARGO_QUANTITY" class="form-control" placeholder="12513.355 MT">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="expiresAt" style="font-weight:600;color:var(--navy-mid);font-size:0.9rem;">Document Expiration (Optional)</label>
+                    <input type="datetime-local" id="expiresAt" class="form-control" style="margin-top:0.5rem;">
+                    <p class="hint">Leave empty for no expiration. QR code will stop working after this date.</p>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">
+                        <span id="btnText">Create Document</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/public/dashboard.js"></script>
+</body>
+</html>

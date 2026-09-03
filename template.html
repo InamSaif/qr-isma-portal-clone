@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <title>Port Clearance - تصريح مغادرة وحدة بحرية</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Libre+Baskerville:wght@400;700&display=swap');
+
+    /* Local Arabic fonts — required for correct joined (cursive) Arabic in PDF */
+    @font-face {
+      font-family: 'Noto Sans Arabic';
+      src: url('assets/fonts/NotoSansArabic-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+    }
+    @font-face {
+      font-family: 'Noto Sans Arabic';
+      src: url('assets/fonts/NotoSansArabic-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+    }
+
+    /* Force color printing — critical for PDF renderers that strip backgrounds/colors */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background: #ffffff !important;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', 'Noto Sans Arabic', 'Tajawal', Georgia, sans-serif;
+      color: #1a1a1a;
+    }
+
+    /* Page wrapper — no border, no shadow */
+    .page {
+      background: #ffffff;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      /* padding: 48px 52px; */
+    }
+
+    /* === HEADER === */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 36px;
+    }
+
+    .logo-svg {
+      width: 88px;
+      height: 88px;
+      flex-shrink: 0;
+    }
+
+    .authority-text {
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    .authority-text .arabic {
+      font-family: 'Noto Sans Arabic', 'Tajawal', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #1a1a1a;
+      display: block;
+      direction: rtl;
+    }
+
+    .authority-text .english {
+      font-family: 'Montserrat', 'Noto Sans Arabic', sans-serif;
+      font-size: 11px;
+      color: #333333;
+      display: block;
+    }
+
+    /* === TITLE BANNER === */
+    .title-banner-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .title-banner {
+      background-color: #233c73;
+      color: #ffffff;
+      text-align: center;
+      padding: 16px 48px;
+      border-radius: 8px;
+    }
+
+    .title-banner .en {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      /* font-weight: 700; */
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    .title-banner .ar {
+      font-family: 'Noto Sans Arabic', 'Tajawal', sans-serif;
+      font-size: 14px;
+      direction: rtl;
+      font-weight: 400;
+      color: #ffffff;
+    }
+
+    /* === FIELDS GRID === */
+    .fields-section {
+      margin-bottom: 40px;
+    }
+
+    /* Use grid layout for proper left-right alignment */
+    .fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+      align-items: start;
+    }
+
+    .field-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .field-col.ltr {
+      padding-right: 0;
+    }
+
+    .field-col.rtl {
+      padding-left: 0;
+    }
+
+    .field-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0px 0;
+      gap: 6px;
+      flex-wrap: nowrap;
+      height: 18px;
+      margin-bottom: 4px;
+    }
+
+    .field-row:last-child {
+      padding-bottom: 0;
+    }
+
+    .field-row.section-gap {
+      margin-bottom: 12px;
+    }
+
+    .field-label {
+      font-family: 'Montserrat', 'Noto Sans Arabic', sans-serif;
+      font-size: 11px;
+      color: #000;
+      white-space: nowrap;
+      flex-shrink: 0;
+      /* font-weight: 500; */
+    }
+
+    .field-label.ar {
+      font-family: 'Noto Sans Arabic', 'Tajawal', sans-serif;
+      /* font-weight: 700; */
+    }
+
+    /* Montserrat for Latin + Noto for Arabic so cargo/type etc. join correctly */
+    .field-value {
+      font-family: 'Montserrat', 'Noto Sans Arabic', 'Tajawal', sans-serif;
+      font-size: 11px;
+      /* font-weight: 500; */
+      color: #233c73;
+      letter-spacing: 0;
+      unicode-bidi: plaintext;
+      word-break: normal;
+    }
+
+    .field-value.has-arabic,
+    .user-text.has-arabic {
+      font-family: 'Noto Sans Arabic', 'Tajawal', 'Montserrat', sans-serif;
+      direction: rtl;
+      unicode-bidi: isolate;
+    }
+
+    .user-text {
+      font-family: inherit;
+      letter-spacing: 0;
+      unicode-bidi: plaintext;
+    }
+
+    .field-value.agency {
+      color: #233c73;
+      font-family: 'Noto Sans Arabic', 'Tajawal', 'Montserrat', sans-serif;
+      font-size: 12px;
+    }
+
+    .divider {
+        height: 3px;
+        background-color: #000;
+        width: 100%;
+    }
+
+    /* === QR SECTION === */
+    .qr-section {
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding: 36px 0px;
+    /* margin-left: -52px; */
+    /* margin-right: -52px; */
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+
+    .qr-box {
+      border-width: 1px;
+      border-style: solid;
+      border-color: #cccccc;
+      padding: 16px;
+      background-color: #ffffff;
+      display: inline-block;
+    }
+
+    .qr-box svg {
+      display: block;
+    }
+
+    .qr-label {
+      font-family: 'Noto Sans Arabic', 'Tajawal', sans-serif;
+      font-size: 15px;
+      color: #555555;
+      direction: rtl;
+    }
+
+    /* === FOOTER === */
+    .clearance-statement {
+      margin-bottom: 28px;
+    }
+
+    .clearance-statement .ar-statement {
+      text-align: right;
+      direction: rtl;
+      font-family: 'Noto Sans Arabic', 'Tajawal', sans-serif;
+      font-size: 17px;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+      line-height: 1.7;
+    }
+
+    .clearance-statement .en-statement {
+      font-family: 'Montserrat', 'Noto Sans Arabic', sans-serif;
+      font-size: 12px;
+      color: #333333;
+      line-height: 1.7;
+    }
+
+    .divider {
+      border: none;
+      border-top-width: 1px;
+      border-top-style: solid;
+      border-top-color: #bbbbbb;
+      margin: 20px 0;
+    }
+
+    .system-note {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .system-note .en {
+      font-family: 'Montserrat', 'Noto Sans Arabic', sans-serif;
+      font-size: 13px;
+      color: #777777;
+    }
+
+    .system-note .ar {
+      font-family: 'Noto Sans Arabic', 'Tajawal', sans-serif;
+      font-size: 13px;
+      color: #777777;
+      direction: rtl;
+      text-align: right;
+    }
+
+    /* Keep expanded certificates on one A4 page without changing legacy output. */
+    .page.has-optional-fields .header {
+      margin-bottom: 20px;
+    }
+
+    .page.has-optional-fields .title-banner-wrap {
+      margin-bottom: 24px;
+    }
+
+    .page.has-optional-fields .fields-section {
+      margin-bottom: 20px;
+    }
+
+    .page.has-optional-fields .qr-section {
+      padding: 18px 0;
+      margin-bottom: 18px;
+      gap: 8px;
+    }
+
+    .page.has-optional-fields .qr-box {
+      padding: 10px;
+    }
+
+    .page.has-optional-fields #qr-code-img {
+      width: 140px !important;
+      height: 140px !important;
+    }
+
+    .page.has-optional-fields .clearance-statement {
+      margin-bottom: 14px;
+    }
+
+    .page.has-optional-fields .divider {
+      margin: 12px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page {{OPTIONAL_LAYOUT_CLASS}}">
+
+    <!-- HEADER -->
+    <div class="header">
+      <img src="assets/logo_isma.png" style="width: 120px; height: 120px;" />
+
+      <div class="authority-text">
+        <span class="arabic">الهيأة البحرية العراقية العليا</span>
+        <span class="english">Iraqi Supreme Maritime Authority</span>
+      </div>
+    </div>
+
+    <!-- TITLE BANNER -->
+    <div class="title-banner-wrap">
+      <div class="title-banner">
+        <div class="en">Port Clearance</div>
+        <div class="ar">تصريح مغادرة وحدة بحرية</div>
+      </div>
+    </div>
+
+    <!-- FIELDS -->
+    <div class="fields-section">
+      <div class="fields-grid">
+
+        <!-- LEFT: English -->
+        <div class="field-col ltr">
+          <div class="field-row">
+            <span class="field-label">Permit Number:</span>
+            <span class="field-value">{{PERMIT_NUMBER}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Issuance Date:</span>
+            <span class="field-value">{{ISSUANCE_DATE}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Vessel Name:</span>
+            <span class="field-value">{{VESSEL_NAME}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Vessel IMO:</span>
+            <span class="field-value">{{VESSEL_IMO}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Flag:</span>
+            <span class="field-value">{{FLAG}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Classification Society:</span>
+            <span class="field-value">{{CLASSIFICATION_SOCIETY}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Departure Port Name:</span>
+            <span class="field-value">{{DEPARTURE_PORT}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Vessel Type:</span>
+            <span class="field-value">{{VESSEL_TYPE}}</span>
+          </div>
+          <div class="field-row section-gap">
+            <span class="field-label">Vessel GRT:</span>
+            <span class="field-value">{{VESSEL_GRT}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Agency Name:</span>
+            <span class="field-value agency">{{AGENCY_NAME}}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Arrival Date:</span>
+            <span class="field-value">{{ARRIVAL_DATE}}</span>
+          </div>
+          <div class="field-row section-gap">
+            <span class="field-label">Departure Date:</span>
+            <span class="field-value">{{DEPARTURE_DATE}}</span>
+          </div>
+          {{OPTIONAL_FIELDS_EN}}
+        </div>
+
+        <!-- RIGHT: Arabic -->
+        <div class="field-col rtl">
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{PERMIT_NUMBER}}</span>
+            <span class="field-label ar">:رقم التصريح</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{ISSUANCE_DATE}}</span>
+            <span class="field-label ar">:تاريخ الإصدار</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{VESSEL_NAME}}</span>
+            <span class="field-label ar">:اسم السفينة</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{VESSEL_IMO}}</span>
+            <span class="field-label ar">:رقم السفينة</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{FLAG}}</span>
+            <span class="field-label ar">:العلم</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{CLASSIFICATION_SOCIETY}}</span>
+            <span class="field-label ar">:هيئة التصنيف</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{DEPARTURE_PORT}}</span>
+            <span class="field-label ar">:اسم ميناء المغادرة</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{VESSEL_TYPE}}</span>
+            <span class="field-label ar">:نوع السفينة</span>
+          </div>
+          <div class="field-row section-gap" style="justify-content:flex-end;">
+            <span class="field-value">{{VESSEL_GRT}}</span>
+            <span class="field-label ar">:الحمولة الطنية الاجمالية المسجلة</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value agency">{{AGENCY_NAME}}</span>
+            <span class="field-label ar">:اسم الوكالة</span>
+          </div>
+          <div class="field-row" style="justify-content:flex-end;">
+            <span class="field-value">{{ARRIVAL_DATE}}</span>
+            <span class="field-label ar">:تاريخ الوصول</span>
+          </div>
+          <div class="field-row section-gap" style="justify-content:flex-end;">
+            <span class="field-value">{{DEPARTURE_DATE}}</span>
+            <span class="field-label ar">:تاريخ المغادرة</span>
+          </div>
+          {{OPTIONAL_FIELDS_AR}}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- QR CODE SECTION -->
+    <div class="qr-section">
+      <div class="qr-box">
+        <img id="qr-code-img" src="{{QR_CODE_URL}}" alt="QR Code" style="width: 160px; height: 160px; image-rendering: pixelated;">
+      </div>
+      <div class="qr-label">مسح الكود QR للتحقق</div>
+    </div>
+
+    <!-- CLEARANCE STATEMENT -->
+    <div class="clearance-statement">
+      <div class="ar-statement">يسمح للسفينة المذكورة اعلاه بمغادرة المياه الاقليمية العراقية</div>
+      <div class="en-statement">The above-mentioned vessel is allowed to Departure from Iraqi territorial waters.</div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SYSTEM NOTE -->
+    <div class="system-note">
+      <span class="en">This is a system-generated Document . no signature is required.</span>
+      <span class="ar">هذه الوثيقة مستخرجة من نظام التصاريح ولا تحتاج الي توقيع</span>
+    </div>
+
+  </div>
+</body>
+</html>

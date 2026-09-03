@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>eCustoms Services Portal - Verify QR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: calc(100% - 80px);
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px 0;
+            box-sizing: border-box;
+        }
+
+        #content-area {
+            padding: 0 40px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #3b91ff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .card-divider {
+            background-color: #f0f0f0;
+            height: 1px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .status-box {
+            background: #f7ffed;
+            border-left: 5px solid #66c205;
+            border-right: 2px solid #e1f1cb;
+            border-top: 2px solid #e1f1cb;
+            border-bottom: 2px solid #e1f1cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .status-icon {
+            font-size: 12px;
+            background-color: #66c205;
+            color: white;
+            padding: 5px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .status-content h3 {
+            font-size: 16px;
+            color: #000;
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .status-content p {
+            font-size: 14px;
+            color: #000;
+            line-height: 1.4;
+        }
+
+        .status-content .status-line {
+            display: block;
+        }
+
+        .no-wrap {
+            white-space: nowrap;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .table-wrapper {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .data-table tr {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .data-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .data-table td {
+            padding: 16px 20px;
+            font-size: 14px;
+            border-right: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .data-table td:last-child {
+            border-right: none;
+        }
+
+        /* Left labels one line; right values wrap at spaces/hyphens like iOS */
+        .data-table td:first-child {
+            color: #666;
+            font-weight: 500;
+            width: 52%;
+            white-space: nowrap;
+            background-color: #fafafa;
+            border-left: none;
+            overflow: hidden;
+            text-overflow: clip;
+            padding-left: 16px;
+            padding-right: 12px;
+        }
+
+        .data-table td:last-child {
+            color: rgba(0, 0, 0, 0.88);
+            font-weight: 400;
+            text-align: left;
+            background-color: #ffffff;
+            width: 48%;
+            white-space: normal;
+            overflow-wrap: break-word;
+            word-break: normal;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .error-box {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #c62828;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #0066cc;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                align-items: center;
+                padding: 24px 0;
+            }
+
+            .container {
+                width: calc(100% - 80px);
+                max-width: 500px;
+                margin: 0 auto;
+                padding: 20px 0;
+            }
+
+            #content-area {
+                padding: 0 30px;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+
+            .data-table td {
+                padding: 16px 16px;
+            }
+
+            .data-table td:first-child {
+                width: 54%;
+                padding-left: 14px;
+                padding-right: 10px;
+            }
+
+            .data-table td:last-child {
+                width: 46%;
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- <div class="lang-switch" onclick="toggleLanguage()" style="cursor: pointer; user-select: none;">
+        <span id="lang-text-en" style="font-weight: 600;">English</span> | <span id="lang-text-ar">العربية</span>
+    </div> -->
+
+    <div class="container" id="main-content">
+        <h1 class="title" id="page-title">EXIT PERMIT Verification</h1>
+        <div class="card-divider"></div>
+        <div id="content-area">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                title: "EXIT PERMIT Verification",
+                validStatus: "VALID EXIT PERMIT",
+                validMessage: "<span class=\"status-line\">This exit permit is currently</span><span class=\"status-line\">valid and active.</span>",
+                permitId: "Permit ID",
+                vessel: "Vessel",
+                imo: "IMO",
+                port: "Port",
+                arrivalDate: "Arrival Date",
+                departureDate: "Departure Date",
+                loading: "Loading permit information...",
+                error: "Unable to load permit information. Please check the QR code and try again."
+            },
+            ar: {
+                title: "التحقق من رخصة المغادرة",
+                validStatus: "رخصة المغادرة سارية",
+                validMessage: "<span class=\"no-wrap\">رخصة المغادرة هذه سارية</span><br>وفعالة حالياً.",
+                permitId: "رقم الرخصة",
+                vessel: "السفينة",
+                imo: "رقم منظمة البحرية الدولية",
+                port: "الميناء",
+                arrivalDate: "تاريخ الوصول",
+                departureDate: "تاريخ المغادرة",
+                loading: "جاري تحميل معلومات الرخصة...",
+                error: "لا يمكن تحميل معلومات الرخصة. يرجى التحقق من رمز الاستجابة السريعة والمحاولة مجدداً."
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+            document.documentElement.setAttribute('lang', currentLang);
+            renderContent();
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                const date = new Date(dateStr);
+                if (currentLang === 'ar') {
+                    return date.toLocaleDateString('ar-SA');
+                } else {
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = date.toLocaleDateString('en-US', { month: 'short' });
+                    const year = date.getFullYear();
+                    return `${day}-${month}-${year}`;
+                }
+            } catch {
+                return dateStr;
+            }
+        }
+
+        function renderContent(data = null) {
+            const contentArea = document.getElementById('content-area');
+            const t = translations[currentLang];
+            document.getElementById('page-title').textContent = t.title;
+
+            if (data) {
+                const html = `
+                    <div class="status-box">
+                        <div class="status-icon">
+                            <i class="fa fa-check"></i>
+                        </div>
+                        <div class="status-content">
+                            <h3>${t.validStatus}</h3>
+                            <p>${t.validMessage}</p>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <tr>
+                                <td>${t.permitId}</td>
+                                <td>${data.PERMIT_NUMBER || '-'}</td>
+                            </tr>
+                            <tr>
+                                <td>${t.vessel}</td>
+                                <td>${data.VESSEL_NAME || '-'}</td>
+                            </tr>
+                            <tr>
+                                <td>${t.imo}</td>
+                                <td>${data.VESSEL_IMO || '-'}</td>
+                            </tr>
+                            <tr>
+                                <td>${t.port}</td>
+                                <td>${data.DEPARTURE_PORT || '-'}</td>
+                            </tr>
+                            <tr>
+                                <td>${t.arrivalDate}</td>
+                                <td>${formatDate(data.ARRIVAL_DATE)}</td>
+                            </tr>
+                            <tr>
+                                <td>${t.departureDate}</td>
+                                <td>${formatDate(data.DEPARTURE_DATE)}</td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+                contentArea.innerHTML = html;
+            } else if (data === null) {
+                contentArea.innerHTML = `<div class="loading">${t.loading}</div>`;
+            } else {
+                contentArea.innerHTML = `<div class="error-box">${t.error}</div>`;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Get document ID from URL path (e.g., /view/69dfa31566bb069ea2aed4a5)
+            let docId = '';
+            const pathParts = window.location.pathname.split('/');
+            const viewIndex = pathParts.findIndex(part => part === 'view');
+            if (viewIndex !== -1 && pathParts.length > viewIndex + 1) {
+                docId = pathParts[viewIndex + 1];
+            } else {
+                const params = new URLSearchParams(window.location.search);
+                docId = params.get('id') || params.get('cert') || params.get('serialNo');
+            }
+
+            if (!docId) {
+                renderContent(false);
+                return;
+            }
+
+            try {
+                renderContent(null); // Show loading
+                
+                // Fetch document from public API endpoint
+                const response = await fetch(`/api/documents/public/${docId}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.document && result.document.formData) {
+                        // Extract formData from the document
+                        renderContent(result.document.formData);
+                    } else {
+                        renderContent(false);
+                    }
+                } else {
+                    renderContent(false);
+                }
+            } catch (error) {
+                console.error('Error fetching document:', error);
+                renderContent(false);
+            }
+        });
+    </script>
+        
+    </script>
+</body>
+</html>
