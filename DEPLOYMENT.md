@@ -4,14 +4,14 @@ This clone uses the **same mechanism as base IOP**.
 
 | Piece | Value |
 |---|---|
-| Parent website | `e-isma.com` (ISMA site, unchanged) |
-| This app | `iop.e-isma.com` (`iop.` + parent domain) |
+| Parent website | `e-lsmaa.com` (ISMA site, unchanged) |
+| This app | `iop.e-lsmaa.com` (`iop.` + parent domain) |
 | Public URL | `https://iop.e-lsmaa.com` |
 | Docker host port | `3017` (base IOP used `3007`) |
 | App port inside container | `3000` |
 | QR / view links | `https://iop.e-lsmaa.com/view/<documentId>` |
 
-If this clone **replaces** live IOP on the same server, keep the hostname `iop.e-isma.com` and point Nginx at this app’s port (`3017`, or change compose to `3007:3000` and proxy that).
+If this clone **replaces** live IOP on the same server, keep the hostname `iop.e-lsmaa.com` and point Nginx at this app’s port (`3017`, or change compose to `3007:3000` and proxy that).
 
 ---
 
@@ -27,7 +27,7 @@ https://iop.e-lsmaa.com/view/<id>
 DNS A record  iop → server IP
       │
       ▼
-Nginx :443  (SSL for iop.e-isma.com)
+Nginx :443  (SSL for iop.e-lsmaa.com)
       │
       ▼
 Docker app  127.0.0.1:3017  →  container :3000
@@ -76,13 +76,13 @@ docker compose version
 
 ## 2. Domain / DNS
 
-In the **e-isma.com** DNS zone (GoDaddy or wherever that domain is managed):
+In the **e-lsmaa.com** DNS zone (GoDaddy or wherever that domain is managed):
 
 | Type | Name | Value | TTL |
 |---|---|---|---|
 | A | `iop` | `<Elastic IP of this server>` | 600 |
 
-That creates `iop.e-isma.com`.
+That creates `iop.e-lsmaa.com`.
 
 Do **not**:
 - Put a CNAME on `iop` as well
@@ -94,8 +94,8 @@ Leave `@` / `www` for the main ISMA site.
 **Check from your laptop** (wait until this returns the Elastic IP):
 
 ```bash
-dig +short iop.e-isma.com
-dig @8.8.8.8 +short iop.e-isma.com
+dig +short iop.e-lsmaa.com
+dig @8.8.8.8 +short iop.e-lsmaa.com
 ```
 
 If this is wrong, stop. Certbot will fail.
@@ -181,7 +181,7 @@ Create `/etc/nginx/sites-available/qr-isma-portal` with **only this** for now:
 server {
     listen 80;
     listen [::]:80;
-    server_name iop.e-isma.com;
+    server_name iop.e-lsmaa.com;
 
     location ^~ /.well-known/acme-challenge/ {
         root /var/www/certbot;
@@ -209,13 +209,13 @@ sudo ln -sf /etc/nginx/sites-available/qr-isma-portal /etc/nginx/sites-enabled/q
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-If another enabled site also has `server_name iop.e-isma.com` (old IOP `qr-isma` file), disable or edit that one. Two vhosts for the same name will break certs.
+If another enabled site also has `server_name iop.e-lsmaa.com` (old IOP `qr-isma` file), disable or edit that one. Two vhosts for the same name will break certs.
 
 **Prove ACME path is not proxied to the app:**
 
 ```bash
 echo "acme-ok" | sudo tee /var/www/certbot/.well-known/acme-challenge/test-file
-curl -i http://iop.e-isma.com/.well-known/acme-challenge/test-file
+curl -i http://iop.e-lsmaa.com/.well-known/acme-challenge/test-file
 ```
 
 Must be `200` and body `acme-ok`.  
@@ -227,13 +227,13 @@ If you get HTML from the login page, or a `301` to HTTPS, Certbot will fail.
 
 ```bash
 sudo apt install -y certbot
-sudo certbot certonly --webroot -w /var/www/certbot -d iop.e-isma.com
+sudo certbot certonly --webroot -w /var/www/certbot -d iop.e-lsmaa.com
 ```
 
 When that succeeds, certs are at:
 
-- `/etc/letsencrypt/live/iop.e-isma.com/fullchain.pem`
-- `/etc/letsencrypt/live/iop.e-isma.com/privkey.pem`
+- `/etc/letsencrypt/live/iop.e-lsmaa.com/fullchain.pem`
+- `/etc/letsencrypt/live/iop.e-lsmaa.com/privkey.pem`
 
 ---
 
@@ -242,7 +242,7 @@ When that succeeds, certs are at:
 Replace `/etc/nginx/sites-available/qr-isma-portal` with the repo file:
 
 ```bash
-sudo cp /var/www/qr-isma-portal/nginx/iop.e-isma.com.conf /etc/nginx/sites-available/qr-isma-portal
+sudo cp /var/www/qr-isma-portal/nginx/iop.e-lsmaa.com.conf /etc/nginx/sites-available/qr-isma-portal
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
@@ -295,7 +295,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 | Certbot `unauthorized` + HTML of the app | ACME path proxied to Node | ACME `location` **before** `location /`, webroot `/var/www/certbot` |
 | Certbot `unauthorized` after HTTPS redirect | Port 443 also proxies ACME | Same ACME `location` on 80 **and** 443 |
 | `nginx: cannot load certificate` | HTTPS vhost enabled before certbot | HTTP-only config first, then issue cert, then HTTPS vhost |
-| `conflicting server name iop.e-isma.com` | Old IOP nginx site still enabled | Disable extra site; one `server_name` only |
+| `conflicting server name iop.e-lsmaa.com` | Old IOP nginx site still enabled | Disable extra site; one `server_name` only |
 | `dig` returns wrong IP | Wrong DNS zone / cache / forwarding | Authoritative nameserver must show Elastic IP |
 | QR opens localhost | `BASE_URL` not public HTTPS | Set `BASE_URL=https://iop.e-lsmaa.com` and regenerate PDF |
 | App up, domain 502 | Nginx proxy port ≠ compose port | Proxy must match host port (`3017` here) |
