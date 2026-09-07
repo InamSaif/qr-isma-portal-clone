@@ -133,7 +133,7 @@ app.get('/', (req, res) => {
         version: '2.0.0',
         endpoints: {
             auth: {
-                register: 'POST /api/auth/register',
+                // register: 'POST /api/auth/register',
                 login: 'POST /api/auth/login',
                 me: 'GET /api/auth/me',
                 logout: 'GET /api/auth/logout'
@@ -160,9 +160,10 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'register.html'));
-});
+// Register page disabled
+// app.get('/register', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'register.html'));
+// });
 
 app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
