@@ -6,10 +6,10 @@ This clone uses the **same mechanism as base IOP**.
 |---|---|
 | Parent website | `e-isma.com` (ISMA site, unchanged) |
 | This app | `iop.e-isma.com` (`iop.` + parent domain) |
-| Public URL | `https://iop.e-isma.com` |
+| Public URL | `https://iop.e-lsmaa.com` |
 | Docker host port | `3017` (base IOP used `3007`) |
 | App port inside container | `3000` |
-| QR / view links | `https://iop.e-isma.com/view/<documentId>` |
+| QR / view links | `https://iop.e-lsmaa.com/view/<documentId>` |
 
 If this clone **replaces** live IOP on the same server, keep the hostname `iop.e-isma.com` and point Nginx at this app’s port (`3017`, or change compose to `3007:3000` and proxy that).
 
@@ -21,7 +21,7 @@ If this clone **replaces** live IOP on the same server, keep the hostname `iop.e
 Phone scans QR
       │
       ▼
-https://iop.e-isma.com/view/<id>
+https://iop.e-lsmaa.com/view/<id>
       │
       ▼
 DNS A record  iop → server IP
@@ -36,7 +36,7 @@ Docker app  127.0.0.1:3017  →  container :3000
 MongoDB in Docker
 ```
 
-`BASE_URL=https://iop.e-isma.com` is written into every new QR code. If that env is `localhost`, scanned codes will not open on phones.
+`BASE_URL=https://iop.e-lsmaa.com` is written into every new QR code. If that env is `localhost`, scanned codes will not open on phones.
 
 ---
 
@@ -126,7 +126,7 @@ nano .env
 Production `.env` must be:
 
 ```env
-BASE_URL=https://iop.e-isma.com
+BASE_URL=https://iop.e-lsmaa.com
 ```
 
 Change `JWT_SECRET` in `docker-compose.yml` (or add it to `.env` and wire it) before going live. Default compose secret is not safe.
@@ -250,7 +250,7 @@ That file:
 
 - HTTP `80` → ACME + redirect to HTTPS
 - HTTPS `443` → proxy to `127.0.0.1:3017`
-- `Host` / `X-Forwarded-Proto` forwarded so the app knows it is `https://iop.e-isma.com`
+- `Host` / `X-Forwarded-Proto` forwarded so the app knows it is `https://iop.e-lsmaa.com`
 
 Renewal is automatic via certbot timer. Confirm:
 
@@ -263,15 +263,15 @@ sudo certbot renew --dry-run
 ## 9. Verify the live app
 
 ```bash
-curl -I https://iop.e-isma.com/login
-curl -I https://iop.e-isma.com/view
+curl -I https://iop.e-lsmaa.com/login
+curl -I https://iop.e-lsmaa.com/view
 ```
 
 In a browser:
 
-1. `https://iop.e-isma.com/register` — create a user
-2. `https://iop.e-isma.com/dashboard` — create a permit
-3. Open the generated PDF — QR must encode `https://iop.e-isma.com/view/<id>`
+1. `https://iop.e-lsmaa.com/register` — create a user
+2. `https://iop.e-lsmaa.com/dashboard` — create a permit
+3. Open the generated PDF — QR must encode `https://iop.e-lsmaa.com/view/<id>`
 4. Scan with a phone (not on the same Wi‑Fi-only URL)
 
 If the QR still shows `localhost` or `http://...:3017`, `BASE_URL` was wrong when the PDF was generated. Fix `.env` / compose, recreate the document.
@@ -297,5 +297,5 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 | `nginx: cannot load certificate` | HTTPS vhost enabled before certbot | HTTP-only config first, then issue cert, then HTTPS vhost |
 | `conflicting server name iop.e-isma.com` | Old IOP nginx site still enabled | Disable extra site; one `server_name` only |
 | `dig` returns wrong IP | Wrong DNS zone / cache / forwarding | Authoritative nameserver must show Elastic IP |
-| QR opens localhost | `BASE_URL` not public HTTPS | Set `BASE_URL=https://iop.e-isma.com` and regenerate PDF |
+| QR opens localhost | `BASE_URL` not public HTTPS | Set `BASE_URL=https://iop.e-lsmaa.com` and regenerate PDF |
 | App up, domain 502 | Nginx proxy port ≠ compose port | Proxy must match host port (`3017` here) |
