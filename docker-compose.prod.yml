@@ -1,0 +1,5 @@
+services:
+  app:
+    environment:
+      - NODE_ENV=production
+      - BASE_URL=https://iop.e-isma.com
