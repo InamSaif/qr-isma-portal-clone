@@ -114,12 +114,29 @@
         }
 
         .table-wrapper {
+            position: relative;
             border-radius: 10px;
             overflow: hidden;
             border: 1px solid #f0f0f0;
             width: 100%;
             max-width: 100%;
             box-sizing: border-box;
+        }
+
+        /* iOS Safari clips this border at the radius; redraw the same 1px stroke on top */
+        @supports (-webkit-touch-callout: none) {
+            .table-wrapper {
+                border-color: transparent;
+            }
+
+            .table-wrapper::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 10px;
+                box-shadow: inset 0 0 0 1px #f0f0f0;
+                pointer-events: none;
+            }
         }
 
         .data-table tr {
