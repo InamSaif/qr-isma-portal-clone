@@ -126,11 +126,11 @@
             box-sizing: border-box;
         }
 
-        /* Round + clip the cells only. Do not clip the frame — iOS Safari
-           drops 1px strokes that sit on overflow:hidden + border-radius. */
+        /* Inner grid is a sharp rectangle — no radius, no wrapping border */
         .table-clip {
-            border-radius: 10px;
-            overflow: hidden;
+            border-radius: 0;
+            overflow: visible;
+            border: none;
         }
 
         .table-edge {
